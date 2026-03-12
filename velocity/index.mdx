@@ -1,0 +1,81 @@
+---
+title: "開發效能賦能"
+description: "驗證安全檢查如何融入開發者的日常工具鏈，實現「發現即修復」，降低修補成本"
+---
+
+<Note>
+  **核心目標：** 驗證安全機制如何無縫融入開發者的日常工具鏈，實現「發現即修復」，將安全審查的摩擦力降至最低。
+</Note>
+
+開發效能賦能倡導「安全左移」理念，透過與 IDE 及 CI/CD 流程的深度整合，在 SDLC 各階段持續掃描開源組件風險、自動執行安全策略，使安全檢查真正成為開發者的助力而非阻礙。
+
+---
+
+## B.1 — IDE 整合即時反饋
+
+- **整合產品**：Sonatype Lifecycle
+- **支援環境**：IntelliJ IDEA, VS Code, Visual Studio, Eclipse (支援 Java, JS, Go, Python 等多種語言生態)
+
+**驗證說明：** 若漏洞遲至 CI/CD 階段才被發現，將導致 Pipeline 失敗並大幅增加重工成本。Sonatype 的 IDE 擴充套件讓開發人員在「撰寫程式碼、引入套件」的當下，即刻獲得安全狀態反饋。問題即寫即知，實現真正的安全左移。
+
+<Frame caption="VS Code 中 Python requirements.txt 的即時安全提示">
+  <video controls className="w-full rounded-xl">
+    <source src="/velocity/video/ide-python.mov" type="video/mp4" />
+    您的瀏覽器不支援影片播放。
+  </video>
+</Frame>
+
+<CardGroup cols={2}>
+  <Frame caption="VS Code + Python (requirements.txt)">
+    <img src="/velocity/images/ide-python.png" alt="VS Code + Python" />
+  </Frame>
+  <Frame caption="VS Code + Java (pom.xml)">
+    <img src="/velocity/images/ide-java.png" alt="VS Code + Java" />
+  </Frame>
+</CardGroup>
+
+---
+
+## B.2 — 瀏覽器擴充元件與預防性選型
+
+- **整合產品**：Sonatype Lifecycle
+- **測試環境**：Javascript (npm)
+
+**驗證說明：** 選擇正確的套件版本能從源頭免去未來的修補麻煩。透過官方瀏覽器擴充元件，開發人員在瀏覽公共套件庫（如 npmjs.com）時，網頁會直接注入該套件各版本的安全評級與合規狀態，協助開發者做出安全的選型決策。
+
+<Frame caption="瀏覽器擴充元件直接於套件庫網頁標示各版本安全狀態">
+  <img src="/velocity/images/browser-extension.png" alt="Sonatype Lifecycle 瀏覽器插件安全標示" />
+</Frame>
+
+---
+
+## B.3 — CI/CD 自動化深度掃描
+
+- **整合產品**：Sonatype Lifecycle
+
+**驗證說明：** 系統支援無縫接入現有 CI/CD 流程。透過 CLI 工具，每次建置或部署時皆自動觸發深度掃描，確保零人工疏漏；同時也提供友善的 Web UI，供非技術人員或稽核人員手動上傳產物進行安全檢測。
+
+<Tabs>
+  <Tab title="CLI 自動化掃描">
+    <Frame caption="CLI 自動化掃描，利於無縫整合各式 CI/CD 工具">
+      <img src="/velocity/images/assessment-cli.png" alt="Sonatype Lifecycle 支持 CLI 送掃" />
+    </Frame>
+  </Tab>
+  <Tab title="Web UI 手動上傳">
+    <Frame caption="UI 介面手動上傳檢測，降低非技術人員的使用門檻">
+      <img src="/velocity/images/assessment-upload.png" alt="Sonatype Lifecycle 支持 UI 送掃" />
+    </Frame>
+  </Tab>
+</Tabs>
+
+---
+
+## B.4 — 最佳修補路徑建議 (Remediation Advice)
+
+- **整合產品**：Sonatype Lifecycle
+
+**驗證說明：** 發現漏洞後的「版本升級評估」往往最耗費開發心力。Sonatype 提供直觀的版本風險時間線，明確標示哪些版本存在破壞性變更 (Breaking Changes)，並直接**建議最佳安全版本**，大幅縮短修補決策時間。
+
+<Frame caption="版本風險時間線及最佳升級版本建議">
+  <img src="/velocity/images/lifecycle-component-recommendation.jpg" alt="風險套件與版本風險時間線，並提供最佳版本建議" />
+</Frame>

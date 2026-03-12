@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dependency Confusion Defense Animation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "media", // Sync with system or Mintlify theme
+        theme: {
+          extend: {
+            colors: { primary: "#ED6C00", mintDark: "#0F1117" },
+            borderColor: { mint: "rgba(255, 255, 255, 0.08)" },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) translateX(0);
+        }
+        25%,
+        75% {
+          transform: translate(-50%, -50%) translateX(-6px);
+        }
+        50% {
+          transform: translate(-50%, -50%) translateX(6px);
+        }
+      }
+      .shake {
+        animation: shake 0.4s ease-in-out;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: transparent;
+      }
+    </style>
+  </head>
+  <body
+    class="w-screen h-screen font-sans text-gray-800 dark:text-gray-200 bg-white dark:bg-mintDark flex items-center justify-center"
+  >
+    <!-- Top Status Bar -->
+    <div
+      id="status-text"
+      class="absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-1.5 text-xs font-medium rounded-full bg-gray-50 dark:bg-black/50 border border-gray-200 dark:border-mint shadow-sm backdrop-blur-sm whitespace-nowrap transition-colors duration-300"
+    >
+      初始化動畫中...
+    </div>
+
+    <!-- Background Connection SVG -->
+    <svg class="absolute inset-0 w-full h-full z-10 pointer-events-none">
+      <line
+        id="l-pub"
+        x1="50%"
+        y1="50%"
+        x2="25%"
+        y2="25%"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-dasharray="5 5"
+        class="text-gray-200 dark:text-gray-800 transition-colors duration-[525ms]"
+      />
+      <line
+        id="l-priv"
+        x1="50%"
+        y1="50%"
+        x2="75%"
+        y2="25%"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-dasharray="5 5"
+        class="text-gray-200 dark:text-gray-800 transition-colors duration-[525ms]"
+      />
+      <line
+        id="l-bld"
+        x1="50%"
+        y1="80%"
+        x2="50%"
+        y2="50%"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-dasharray="5 5"
+        class="text-gray-200 dark:text-gray-800 transition-colors duration-[525ms]"
+      />
+    </svg>
+
+    <!-- Node 1: Public Registry (Hacker) -->
+    <div
+      class="absolute top-[25%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center w-32 p-3 bg-white dark:bg-gray-900/80 border border-gray-200 dark:border-mint rounded-xl shadow-sm backdrop-blur"
+    >
+      <svg
+        class="w-6 h-6 text-red-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+        ></path>
+      </svg>
+      <div class="text-xs font-semibold mt-1">npmjs 公開庫</div>
+      <div
+        class="mt-2 px-1 py-0.5 w-full text-center text-[10px] font-mono bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/20 rounded truncate"
+      >
+        v9.9.9 (Malicious)
+      </div>
+    </div>
+
+    <!-- Node 2: Private Registry (Safe) -->
+    <div
+      class="absolute top-[25%] left-[75%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center w-32 p-3 bg-white dark:bg-gray-900/80 border border-gray-200 dark:border-mint rounded-xl shadow-sm backdrop-blur"
+    >
+      <svg
+        class="w-6 h-6 text-green-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+        ></path>
+      </svg>
+      <div class="text-xs font-semibold mt-1">企業內部庫</div>
+      <div
+        class="mt-2 px-1 py-0.5 w-full text-center text-[10px] font-mono bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-500/20 rounded truncate"
+      >
+        v1.0.0 (Safe)
+      </div>
+    </div>
+
+    <!-- Node 3: Routing Rules -->
+    <div
+      class="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center w-40 p-3 bg-white dark:bg-gray-900/80 border border-gray-200 dark:border-mint rounded-xl shadow-sm backdrop-blur"
+    >
+      <svg
+        class="w-6 h-6 text-primary"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+        ></path>
+      </svg>
+      <div class="text-xs font-semibold mt-1">Routing Rules</div>
+      <div
+        class="mt-2 p-1.5 w-full text-left text-[9px] font-mono bg-gray-50 dark:bg-black/50 text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-mint rounded leading-tight"
+      >
+        # block public<br />
+        <span class="text-primary">^@corp/.*$</span><br />
+        → block npmjs<br />
+        → route internal
+      </div>
+    </div>
+
+    <!-- Node 4: Build System -->
+    <div
+      class="absolute top-[80%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center w-40 p-3 bg-white dark:bg-gray-900/80 border border-gray-200 dark:border-mint rounded-xl shadow-sm backdrop-blur"
+    >
+      <svg
+        class="w-6 h-6 text-gray-600 dark:text-gray-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        ></path>
+      </svg>
+      <div class="text-xs font-semibold mt-1">建置系統 (CI/CD)</div>
+      <div
+        class="mt-2 px-2 py-1 w-full text-center text-[9px] font-mono bg-gray-50 dark:bg-black/50 border border-gray-100 dark:border-mint rounded truncate"
+      >
+        npm i @corp/pkg
+      </div>
+    </div>
+
+    <!-- Block Icon (X) -->
+    <svg
+      id="block-x"
+      class="absolute top-[37.5%] left-[37.5%] -translate-x-1/2 -translate-y-1/2 z-40 w-12 h-12 text-red-500 transition-all duration-[315ms] scale-0 opacity-0 drop-shadow-md"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      stroke-width="3"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      ></path>
+    </svg>
+
+    <!-- Moving Packet -->
+    <div
+      id="packet"
+      class="absolute top-[80%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-30 w-24 h-6 flex items-center justify-center text-[9px] font-mono font-bold text-white rounded shadow-md transition-all duration-[735ms] bg-gray-600 dark:bg-gray-700"
+    >
+      REQ @corp/pkg
+    </div>
+
+    <!-- Animation Logic -->
+    <script>
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      const el = (id) => document.getElementById(id);
+      const setLine = (id, color) =>
+        (el(id).className = `text-${color} transition-colors duration-[525ms]`);
+
+      async function runAnimation() {
+        const packet = el("packet"),
+          status = el("status-text"),
+          block = el("block-x");
+
+        while (true) {
+          // Initial Reset
+          packet.style.transition = "none";
+          packet.style.top = "80%";
+          packet.style.left = "50%";
+          packet.style.opacity = "1";
+          packet.className =
+            "absolute -translate-x-1/2 -translate-y-1/2 z-30 w-24 h-6 flex items-center justify-center text-[9px] font-mono font-bold text-white rounded shadow-md transition-all duration-[735ms] bg-gray-500";
+          packet.innerText = "REQ @corp/pkg";
+          block.style.transform = "translate(-50%, -50%) scale(0)";
+          block.style.opacity = "0";
+          setLine("l-pub", "gray-200 dark:text-gray-800");
+          setLine("l-priv", "gray-200 dark:text-gray-800");
+          setLine("l-bld", "gray-200 dark:text-gray-800");
+          status.innerText = "1. 建置系統發出內部套件請求";
+          status.className =
+            status.className.replace(/text-\w+-\d+/g, "") +
+            " text-gray-700 dark:text-gray-300";
+
+          await sleep(840); // 800 * 1.05
+
+          // Step 1: Move to Router
+          packet.style.transition = "all 0.84s ease-in-out"; // 0.8 * 1.05
+          packet.style.top = "50%";
+          setLine("l-bld", "gray-400");
+          await sleep(840);
+          status.innerText = "2. Routing Rules 檢查請求命名空間";
+          packet.className = packet.className.replace(
+            "bg-gray-500",
+            "bg-primary",
+          );
+          await sleep(1050); // 1000 * 1.05
+
+          // Step 2: Attempt external resolution (Attack Path)
+          status.innerText = "3. 觸發路由規則限制，阻擋外部請求";
+          packet.style.top = "37.5%";
+          packet.style.left = "37.5%";
+          setLine("l-pub", "red-400/50");
+          await sleep(630); // 600 * 1.05
+
+          // Step 3: Blocked
+          block.style.transform = "translate(-50%, -50%) scale(1)";
+          block.style.opacity = "1";
+          setLine("l-pub", "red-500");
+          packet.className =
+            packet.className.replace("bg-primary", "bg-red-500") + " shake";
+          packet.innerText = "BLOCKED!";
+          status.className = status.className.replace(
+            "text-gray-700 dark:text-gray-300",
+            "text-red-600 dark:text-red-400",
+          );
+          await sleep(1260); // 1200 * 1.05
+
+          // Step 4: Rerouting
+          status.innerText = "4. 強制路由至企業內部安全庫";
+          status.className = status.className.replace(
+            "text-red-600 dark:text-red-400",
+            "text-primary",
+          );
+          packet.classList.remove("shake");
+          packet.style.top = "50%";
+          packet.style.left = "50%";
+          packet.className = packet.className.replace(
+            "bg-red-500",
+            "bg-primary",
+          );
+          packet.innerText = "REROUTING...";
+          await sleep(840);
+
+          // Step 5: Fetch safe package
+          packet.style.top = "25%";
+          packet.style.left = "75%";
+          setLine("l-priv", "green-500");
+          await sleep(840);
+          status.innerText = "5. 成功取得安全版本套件 (v1.0.0)";
+          status.className = status.className.replace(
+            "text-primary",
+            "text-green-600 dark:text-green-400",
+          );
+          packet.className = packet.className.replace(
+            "bg-primary",
+            "bg-green-500",
+          );
+          packet.innerText = "pkg v1.0.0";
+          await sleep(840);
+
+          // Step 6: Return to Router
+          packet.style.top = "50%";
+          packet.style.left = "50%";
+          await sleep(840);
+
+          // Step 7: Return to Build System
+          packet.style.top = "80%";
+          setLine("l-bld", "green-500");
+          status.innerText = "6. 免疫混淆攻擊，安全完成依賴安裝";
+          await sleep(1575); // 1500 * 1.05
+
+          // Fade out and end
+          packet.style.opacity = "0";
+          await sleep(2100); // 2000 * 1.05
+        }
+      }
+
+      setTimeout(runAnimation, 525); // 500 * 1.05
+    </script>
+  </body>
+</html>

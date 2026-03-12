@@ -1,0 +1,99 @@
+---
+title: "POC 驗證環境建置"
+description: "Sonatype POC 演示環境的軟硬體規格、網路架構與初始設定說明"
+---
+
+## 核心目標
+
+說明 POC 演示環境的建置方式、軟硬體需求與網路架構，確保驗證過程可穩定重現。
+
+---
+
+## 軟硬體需求
+
+### 基礎設施需求
+
+| 項目         | 建議需求         |
+| ------------ | ---------------- |
+| **CPU**      | 8 核心以上       |
+| **記憶體**   | 32 GB RAM 以上   |
+| **儲存空間** | 500 GB SSD 以上  |
+| **作業系統** | Ubuntu 22.04 LTS |
+
+### 軟體版本
+
+<Note>
+Sonatype Firewall（防火牆攔截功能）已整合於 Lifecycle（IQ Server）之中，不作為獨立元件部署。
+</Note>
+
+| 軟體元件           | 版本      | 用途說明                          |
+| ------------------ | --------- | --------------------------------- |
+| Nexus Repository   | 3.90.1    | 二進位檔案儲存庫                  |
+| Sonatype Lifecycle | 201    | 漏洞掃描、SBOM 產出與惡意套件攔截 |
+
+---
+
+## 對外連網需求
+
+<Warning>
+防火牆規則請以**網域名稱（hostname）**設定白名單，切勿僅信任 IP 位址。部分網域（如 `clm.sonatype.com`）背後採用 AWS CloudFront，IP 會隨時間異動，以 IP 鎖定將導致連線中斷。
+</Warning>
+
+### Sonatype Lifecycle（IQ Server）
+
+| 網域 | 連接埠 | 用途 |
+| ---- | ------ | ---- |
+| `clm.sonatype.com` | 443 TCP | **必要** — 授權驗證與 Sonatype Data Services 漏洞情資同步。此網域與連接埠不可調整。 |
+| `cdn.sonatype.com` | 443 TCP | 電子郵件通知所需的靜態資源（由收件端郵件用戶端存取） |
+
+<Info>
+詳見官方文件：[Configuring Outbound Traffic](https://help.sonatype.com/en/configuring-outbound-traffic.html) · [Firewall Config for IQ Server](https://support.sonatype.com/hc/en-us/articles/213463768-Configuring-firewalls-and-network-access-for-the-Sonatype-IQ-Server)
+</Info>
+
+### Nexus Repository
+
+| 網域 | 連接埠 | 用途 |
+| ---- | ------ | ---- |
+| `rhc-pro.sonatype.com` | 443 | Repository Health Check（Pro 授權） |
+| `rhc.sonatype.com` | 443 | Repository Health Check（OSS） |
+| `links.sonatype.com` | 80 / 443 | 產品歡迎頁與外部通知內容 |
+| `download.sonatype.com` | 80 / 443 | 產品歡迎頁與外部通知內容 |
+| `sonatype-download.global.ssl.fastly.net` | 80 / 443 | 產品歡迎頁與外部通知內容 |
+
+<Info>
+詳見官方文件：[Repository Health Check](https://help.sonatype.com/en/repository-health-check.html) · [Outreach Messages](https://support.sonatype.com/hc/en-us/articles/213464978)
+</Info>
+
+#### Docker Hub 代理（選配）
+
+若環境中設有 Docker Hub proxy repository，需額外放行以下網域：
+
+- `auth.docker.io`
+- `registry-1.docker.io`
+- `index.docker.io`
+- `dseasb33srnrn.cloudfront.net`
+- `production.cloudflare.docker.com`
+
+<Info>
+詳見官方文件：[Docker Hub Whitelist](https://support.sonatype.com/hc/en-us/articles/115015442847)
+</Info>
+
+### 套件代理來源
+
+| 目的地 | 用途 |
+| ------ | ---- |
+| `https://registry.npmjs.org` | NPM 套件代理 |
+| `https://pypi.org` | Python PyPI 套件代理 |
+
+---
+
+## 連線驗證
+
+環境建置完成後，可於 IQ Server 主機執行以下指令確認對外連線正常：
+
+```bash
+nslookup clm.sonatype.com
+curl -v -k https://clm.sonatype.com/ping
+```
+
+回應 HTTP 200 且內容為 `alive` 即表示連線正常。

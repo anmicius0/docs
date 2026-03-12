@@ -1,0 +1,162 @@
+---
+title: "Sonatype 生態圈概覽"
+description: "從開源組件引入到交付全流程的軟體供應鏈安全解決方案"
+---
+
+<Hero>
+
+# Sonatype 生態圈概覽
+
+當今企業應用程式中，逾九成的程式碼來自開源組件。軟體供應鏈的安全，早已不是單純的技術議題，而是企業整體韌性的關鍵基石。
+
+</Hero>
+
+<Frame caption="Sonatype 生態系統圖">
+  <img src="/overview/images/sonatype-ecosystem.jpeg" alt="Sonatype 生態系統圖" />
+</Frame>
+
+Sonatype 的核心使命，在於透過自動化、可審計的閉環管理機制，協助企業打造一道貫穿組件引入、儲存、開發到交付全流程的**軟體開發防火牆**，確保每一個環節都具備完整安全保障。
+
+---
+
+## 後 CVE 時代的資安風險管理
+
+<Columns>
+  <Frame caption="MITRE 斷炊的新聞">
+    <img src="/overview/images/news-MITRE.png" alt="MITRE 斷炊的新聞" />
+  </Frame>
+  <Frame caption="CISA 斷炊的新聞">
+    <img src="/overview/images/news-CISA.png" alt="CISA 斷炊的新聞" />
+  </Frame>
+</Columns>
+
+過去數十年間，**CVE** 漏洞編號體系、**NVD** 風險評分資料庫，以及 **CISA** 的緊急預警機制，共同構成了全球資安情資的公共基礎設施。這套由美國聯邦預算高度支撐的三層架構，長期作為業界識別與回應威脅的共同語言。
+
+<Accordion title="名詞說明：CVE 體系的五大支柱">
+
+| 縮寫 | 職能說明 |
+|------|----------|
+| **MITRE** | 負責 CVE 編號的統一指派與命名標準，是整個漏洞識別體系的源頭 |
+| **CVE** | 公開已知漏洞的標準化識別碼（如 `CVE-2023-XXXX`），由 MITRE 維護，為業界共通語言 |
+| **NIST** | 美國國家標準與技術研究院，負責維護 NVD，並制定 CVSS 評分標準與資安框架 |
+| **NVD** | 由 NIST 維護的國家漏洞資料庫，基於 CVE 補充 CVSS 風險評分、受影響平台及修補狀態 |
+| **CISA** | 美國聯邦資安主管機關，發布已遭實際利用漏洞的緊急預警清單（KEV），亦為 CVE 體系的主要資金來源 |
+
+**協作流程**：漏洞被發現 → MITRE 指派 CVE 編號 → NIST 在 NVD 補充評分與技術細節 → CISA 就高風險漏洞發布緊急警示，並持續資助整個體系運作。
+
+</Accordion>
+
+然而，2025 年 4 月爆發的 **CVE 體系資金危機**，首度將這套架構的脆弱性攤在陽光下。
+
+<Warning>
+MITRE 宣告政府合約將於 4/17 到期、CISA 雖緊急介入但形勢持續不穩——這場動盪不只是預算問題，更是對整個體系**三項根本性結構缺陷**的一次集體暴露。
+</Warning>
+
+### 三大結構性缺陷
+
+<CardGroup cols={3}>
+
+<Card title="情資滯後" icon="clock">
+從威脅發現到 CVE 正式指派，往往需要數週之久，企業在此期間面臨無情資可循的裸露風險。
+</Card>
+
+<Card title="資料品質偏差" icon="triangle-exclamation">
+高達 **92%** 的 CVE 原始資料存在精確度問題，誤報大量消耗開發與安全團隊的有效工時。
+</Card>
+
+<Card title="單點失效風險" icon="link-slash">
+整個體系仰賴單一資金來源，一旦中斷，企業防禦將出現全面性盲區。
+</Card>
+
+</CardGroup>
+
+<Note>
+目前，NVD 已積壓逾 **3 萬筆**待處理漏洞，且無明確消化時程。全球依賴此體系的企業，均正面臨潛在且持續的情資空窗。
+</Note>
+
+### 危機時間線
+
+<AccordionGroup>
+
+<Accordion title="MITRE / CVE 體系 — 情資鏈源頭遭遇存亡危機">
+
+| 時間點 | 事件 |
+|--------|------|
+| 2025 年 4 月初 | Trump 政府透過 DOGE 終止 MITRE 逾 2,800 萬美元合約，隨即裁撤維吉尼亞州逾 442 名員工 |
+| 2025 年 4 月 15 日 | MITRE 副總裁 Yosry Barsoum 致函 CVE 委員會：DHS 合約將於 2025 年 4 月 16 日到期且未獲續約，運作 25 年的全球公共基礎設施面臨中斷風險 |
+| 2025 年 4 月 16 日 | CISA 於當晚緊急執行 11 個月合約延長，危機暫時解除；CVE 基金會同步宣告成立 |
+| 2026 年 3 月（預計） | 延長合約屆滿，下一輪資金缺口懸而未決 |
+
+</Accordion>
+
+<Accordion title="NIST / NVD — 漏洞評分與豐化能力持續惡化">
+
+| 時間點 | 事件 |
+|--------|------|
+| 2024 年 2 月 | NIST 預算削減約 12%，NVD 豐化作業急速降速；至 2024 年 5 月，逾 93% 新增漏洞未獲豐化，已知被利用漏洞（KEV）中逾 50% 亦無分析資料 |
+| 2025 年全年 | 2024 年 CVE 提交量年增 32%（NIST 官方數據），積壓逾 30,000 筆待處理漏洞，且無明確消化時程 |
+| 2025 年 10 月 1 日 | 聯邦政府停擺，NVD 網站更新與豐化作業全面暫停，至 2025 年 11 月下旬停擺結束前歷時逾六週 |
+| 2025 年 FY2026 預算提案 | 提案削減 NIST 預算 3.25 億美元（約 43%）；國會兩院最終否決，但機構信心與人才留任已受重創 |
+
+</Accordion>
+
+<Accordion title="CISA — 整個體系的資金樞紐正遭結構性削弱">
+
+| 時間點 | 事件 |
+|--------|------|
+| 2025 年 2 月至 3 月 | DOGE 主導裁員逾 130 名員工，多個部門主管相繼離職或被免職；前局長 Chris Krebs 遭司法部正式啟動調查 |
+| 2025 年持續 | 撤回對 MS-ISAC 等關鍵情資共享組織的資助；至 2025 年 5 月底，近 1,000 名 CISA 員工透過自願離職及買斷方案離開，幾乎所有高階主管均已去職 |
+| 2025 年 10 月 1 日至 11 月下旬 | 聯邦停擺逾六週，CISA 僅保留約三分之一員工（約 35%）維持基本運作 |
+| 2025 年 FY2026 預算提案 | 提案削減 4.95 億美元（約 30% 預算）及約 1,083 個職位；利害關係人部門擬削減 62%，國家風險管理中心擬削減 73%，地區辦公室擬削減 27% |
+
+</Accordion>
+
+</AccordionGroup>
+
+<Tip>
+**此次危機對 Sonatype 客戶的實際影響極為有限。** 原因在於 Sonatype 從未將 CVE 體系作為唯一情資來源。透過自有的 **Sonatype ID** 體系（格式如 `SONATYPE-2023-XXXX`），Sonatype 持續自動監控 GitHub、Changelog、Reddit 等多元管道，在漏洞進入公共資料庫之前便提供早期預警。
+</Tip>
+
+---
+
+## Forrester Wave™ SCA 領導者
+
+<Frame caption="Sonatype 獲 Forrester Wave™ 評選為 SCA 行業領導者">
+  <img src="/overview/images/news-forrester.png" alt="Forrester Wave™ SCA 領導者" />
+</Frame>
+
+**Forrester Wave™** 是全球頂尖獨立研究機構 Forrester Research 發布的市場評鑑報告，針對特定技術領域的主要廠商進行系統性比較分析。評鑑涵蓋三大維度：
+
+- **當前產品能力**：功能深度、技術成熟度與整合生態
+- **技術策略願景**：產品藍圖與創新方向
+- **市場執行力**：客戶成功、營運規模與長期可靠性
+
+<Info>
+Forrester Wave™ 並非廠商自我宣稱，亦非付費取得的認證。所有評鑑結果均由 Forrester 分析師獨立作成，企業無法透過商業合作影響評級結論，因此被視為採購決策中極具參考價值的第三方公信力背書。
+</Info>
+
+<Check>
+Sonatype 連續多年獲評 Forrester Wave™ **軟體組成分析（SCA）領導者**第一名。在戰略深度與產品成熟度上，均被視為應對未來複雜供應鏈威脅的首選方案。
+</Check>
+
+---
+
+## 核心價值主張：三大防護支柱
+
+本次驗證報告以三大核心價值為框架，涵蓋企業軟體供應鏈的全生命週期防護。
+
+<CardGroup cols={1}>
+
+<Card title="邊界主動防禦" icon="shield-halved" href="/perimeter" horizontal>
+「拒敵於國門之外」—— 在惡意組件進入開發流程之前，透過 AI 驅動的自動偵測與隔離機制即時攔截，每月可識別並封鎖逾 **2,100 個**惡意開源組件。
+</Card>
+
+<Card title="開發效能賦能" icon="bolt" href="/velocity" horizontal>
+「安全左移」—— 透過與 IDE 及 CI/CD 流程的深度整合，在 SDLC 各階段持續掃描開源組件風險，使安全檢查成為開發者的助力而非阻礙。
+</Card>
+
+<Card title="企業級治理與合規" icon="scale-balanced" href="/governance" horizontal>
+完整的權限管控、審計軌跡與 SBOM 管理能力，協助企業滿足歐盟 CRA、美國 EO 14028 及國內金融監管對軟體透明度的合規要求。
+</Card>
+
+</CardGroup>

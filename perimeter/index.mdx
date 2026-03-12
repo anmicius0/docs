@@ -1,0 +1,78 @@
+---
+title: "邊界主動防禦"
+description: "驗證系統是否能有效防止惡意、低品質或不合規套件進入內網"
+---
+
+<Note>
+  **核心目標：** 邊界主動防禦的理念是「拒敵於國門之外」——在惡意組件進入開發流程之前，透過 AI 驅動的自動偵測與隔離機制即時攔截，每月可識別並封鎖逾 2,100 個惡意開源組件，從源頭防止惡意程式碼污染供應鏈。Nexus Repository 作為內部可信儲存庫，與 Sonatype Firewall 協同運作，確保所有二進位檔案、容器映像與建置產物均來自經過驗證的單一可信來源。
+</Note>
+
+---
+
+## A.1 — Sonatype Firewall 策略執行與攔截
+
+- **整合產品**：Nexus Repository（儲存）、Sonatype Firewall（過濾）
+- **測試環境**：Python (pip), Javascript (npm)
+
+**驗證說明：** 惡意開源套件難以透過肉眼辨識，若流竄至開發或部署階段，清除成本極高。Sonatype Firewall 在套件請求進入內部 Nexus 儲存庫的「第一道關卡」自動執行策略審查。一旦確認為高風險或惡意組件，即刻阻斷下載，確保開發者環境的安全。
+
+<Frame caption="Python (pypi) 高風險套件於下載階段遭即時阻攔">
+  <video controls className="w-full rounded-xl">
+    <source src="/perimeter/video/python-firewall.mov" type="video/mp4" />
+    您的瀏覽器不支援影片播放。
+  </video>
+</Frame>
+
+<Frame caption="Python (pypi) 高風險套件於下載階段遭即時阻攔">
+  <img src="/perimeter/images/python-firewall.jpg" alt="Python (pypi) 高風險套件於下載階段遭即時阻攔" />
+</Frame>
+
+<Frame caption="Javascript (npm) 高風險套件於下載階段遭即時阻攔">
+  <img src="/perimeter/images/js-firewall.jpg" alt="Javascript (npm) 高風險套件於下載階段遭即時阻攔" />
+</Frame>
+
+---
+
+## A.2 — 隔離區管理與威脅可視化
+
+- **整合產品**：Nexus Repository、Sonatype Firewall
+- **測試環境**：Python (pip), Javascript (npm)
+
+**驗證說明：** 攔截威脅後，資安團隊需要全局視角來進行後續處置。Sonatype Firewall 提供多層次的隔離儀表板，從單一組件的詳細違規報告，到整體內部倉庫的健康度概覽，讓管理者一目了然，免去翻找原始 Log 的繁瑣。
+
+<Frame caption="Sonatype Firewall 的單一套件風險報告">
+  <img src="/perimeter/images/firewall-cli-report.jpg" alt="Sonatype Firewall 的單一套件風險報告" />
+</Frame>
+
+<Frame caption="單一 Nexus Repository 的整體健康度視圖">
+  <img src="/perimeter/images/firewall-repo-report.png" alt="單一 Nexus Repository 的整體健康度視圖" />
+</Frame>
+
+<Frame caption="Sonatype Firewall 隔離區 (Quarantine) 清單">
+  <img src="/perimeter/images/firewall-quarantine-list.jpg" alt="Sonatype Firewall 隔離區 (Quarantine) 清單" />
+</Frame>
+
+<Frame caption="Nexus Repository 介面直觀顯示違規與隔離數量">
+  <img src="/perimeter/images/repository-report.png" alt="Nexus Repository 介面直觀顯示違規與隔離數量" />
+</Frame>
+
+---
+
+## A.3 — 命名空間保護與依賴混淆防護 (Dependency Confusion)
+
+- **整合產品**：Nexus Repository
+
+**驗證說明：** 「依賴混淆」是近年常見的供應鏈攻擊手法。當駭客在公共套件庫上傳與企業內部私有套件（如 `com.company.auth`）同名但版本號更高的惡意套件時，自動化建置系統極易遭到欺騙而下載惡意版本。Nexus Repository 透過**路由規則 (Routing Rules)** 徹底封堵此漏洞：管理者可透過正規表示式，強制規定特定命名空間僅能自內部託管倉庫讀取，嚴禁向外部代理請求，從架構面切斷攻擊路徑。
+
+
+<iframe
+  src="/perimeter/components/dependency-confusion.html"
+  width="100%"
+  style={{ height: '600px', border: 'none', borderRadius: '12px' }}
+  title="依賴混淆攻擊與防禦流"
+/>
+
+
+<Frame caption="透過 Routing Rules 設定白名單，免疫依賴混淆攻擊">
+  <img src="/perimeter/images/routing-rule.png" alt="透過 Routing Rules 建立白名單，防止內外部套件混淆導致的供應鏈污染" />
+</Frame>

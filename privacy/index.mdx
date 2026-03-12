@@ -1,0 +1,123 @@
+---
+title: "程式碼隱私保護"
+description: "了解 Sonatype 如何在提供安全掃描功能的同時，完整守護您的程式碼隱私"
+---
+
+<Hero>
+
+# 程式碼隱私保護
+
+Sonatype 深知智慧財產權對企業的重要性。Nexus Repository 與 Lifecycle 在提供全方位安全掃描的同時，從一開始就以「你的程式碼永遠不會離開你的環境」為核心設計原則。
+
+</Hero>
+
+---
+
+## 資料處理架構總覽
+
+Sonatype 產品所收集的資料（簡稱「Product Data」），從蒐集、傳輸到儲存的每一個環節，都受到嚴格的安全治理與分類標準所規範。
+
+<CardGroup cols={2}>
+
+<Card title="Scan Data" icon="fingerprint">
+應用程式掃描時所傳輸的資料，僅用於軟體組成分析（SCA）並提供開源情報辨識。
+</Card>
+
+<Card title="Product Usage Analytics" icon="chart-line">
+用於改善產品體驗與功能的使用行為資料，幫助 Sonatype 持續優化產品。
+</Card>
+
+</CardGroup>
+
+<Note>
+Sonatype 將所有 Scan Data 與 Product Usage Analytics 一律視為客戶機密資訊，絕不使用於其他用途。
+</Note>
+
+---
+
+## Nexus Repository 遙測
+
+Nexus Repository 內建產品使用分析功能，所有收集的資料都經過嚴格的**匿名化處理**，完全不涉及任何敏感資訊：
+
+<CardGroup cols={2}>
+
+<Card title="絕不收集" icon="ban" horizontal>
+- 帳號、密碼、Email、主機名稱或 URL
+- 儲存庫名稱、組件名稱、座標、路徑或任何與內容相關的資訊
+</Card>
+
+<Card title="只收集這些" icon="check" horizontal>
+- 功能使用偏好
+- 錯誤發生頻率
+- 效能表現數據
+</Card>
+
+</CardGroup>
+
+---
+
+## Lifecycle / Nexus 漏洞掃描器
+
+當 Sonatype 為您的應用程式進行漏洞掃描時，系統僅會傳送**組件的雜湊指紋**作為識別依據，**絕不會讀取或傳送您的實際程式碼**：
+
+<Quote author="Sonatype" href="https://support.sonatype.com/hc/en-us/articles/213463928-Nexus-Vulnerability-Scanner-FAQ">
+Only these limited signatures of your application's components will be exchanged with the Sonatype Data Service — **no source or binary code is ever exposed, uploaded, or sent to Sonatype**.
+</Quote>
+
+### 實際傳輸範例
+
+以下為官方文件中公布的真實傳輸格式，只有一串 SHA-1 雜湊值，原始程式碼完全不在傳輸內容中：
+
+```xml
+<item
+  key="013b4d333e95f3a5ac765fc2a3ab05e9f29d7952"
+  path="ch/qos/logback/core/util/Loader.class"
+  sha1="6cdbcfa9150af71c7b6b3adfbbc1e1e940f9413e"
+  sha1JA001="2f9768f33c106400ae23863165643d167a25e8ba"
+/>
+```
+
+<Tip>
+這些 SHA-1 簽章都是**單向雜湊**，無法從雜湊值反推原始程式碼內容。
+</Tip>
+
+---
+
+## 資料處理承諾
+
+### 資料傳輸內容
+
+| 資料類型 | 說明 |
+|---------|------|
+| **Hashed IDs** | 經過單向雜湊的開源元件識別符，無法逆推原始內容 |
+| **Validation ID** | 用於驗證掃描請求來自合法 Sonatype IQ Server 的授權識別符 |
+
+### 安全與合規
+
+<CardGroup cols={3}>
+
+<Card title="全程加密" icon="lock">
+所有 Product Data 在傳輸及儲存時皆已加密，滴水不漏
+</Card>
+
+<Card title="國際標準" icon="shield-halved">
+資訊安全體系對標 **ISO 27000** 與 **NIST** 標準
+</Card>
+
+<Card title="不販售資料" icon="ban">
+Sonatype 明確承諾**絕不將 Product Data 販售給任何第三方**
+</Card>
+
+</CardGroup>
+
+### 存取管控
+
+所有資料存取皆採審批制，由 ticketing 系統控管。資料擁有者可即時核可或撤銷存取權限，全程符合 Sonatype 內部的資訊分類標準。
+
+---
+
+## 相關參考文件
+
+- [Nexus Repository Telemetry](https://help.sonatype.com/en/nexus-repository-telemetry.html)
+- [Nexus Vulnerability Scanner FAQ](https://support.sonatype.com/hc/en-us/articles/213463928-Nexus-Vulnerability-Scanner-FAQ)
+- [Sonatype Data Handling Process](https://help.sonatype.com/en/sonatype-data-handling-process.html)
